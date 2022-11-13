@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 @Where(clause = "is_deleted=false")
+//Any repository which uses user entity, whatever query inside include where clause
 public class User extends BaseEntity {
 
     private String firstName;
