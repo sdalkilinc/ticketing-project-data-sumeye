@@ -17,13 +17,13 @@ public class ProjectMapper {
     }
 
     public Project convertToEntity(ProjectDTO dto){
-        return modelMapper.map(dto, Project.class);
+        return modelMapper.map(dto,Project.class);
 
     }
 
-    public UserDTO convertToDto(User entity){
-        return modelMapper.map(entity, UserDTO.class);
-    }
+    public ProjectDTO convertToDto(Project entity){
 
+        return modelMapper.map(entity,ProjectDTO.class);
+    }
 
 }
