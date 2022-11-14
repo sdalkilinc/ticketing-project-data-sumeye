@@ -95,15 +95,14 @@ public class TaskController {
             model.addAttribute("tasks", taskService.listAllTasks());
 
             return "/task/update";
-
         }
 
         taskService.update(task);
-
         return "redirect:/task/create";
 
     }
-//
+
+
 //    @GetMapping("/employee/pending-tasks")
 //    public String employeePendingTasks(Model model) {
 //        model.addAttribute("tasks", taskService.findAllTasksByStatusIsNot(Status.COMPLETE));
