@@ -22,7 +22,6 @@ public class ProjectServiceImpl implements ProjectService{
 
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
-
     private final UserService userService;
     private final UserMapper userMapper;
     private final TaskService taskService;
