@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class TaskServiceImpl implements TaskService {
+public class TaskServiceImpl implements TaskService{
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
@@ -73,5 +73,15 @@ public class TaskServiceImpl implements TaskService {
             return taskMapper.convertToDto(task.get());
         }
         return null;
+    }
+
+    @Override
+    public int totalNonCompletedTask(String projectCode) {
+        return taskRepository.totalNonCompletedTasks(projectCode);
+    }
+
+    @Override
+    public int totalCompletedTask(String projectCode) {
+        return taskRepository.totalCompletedTasks(projectCode);
     }
 }
