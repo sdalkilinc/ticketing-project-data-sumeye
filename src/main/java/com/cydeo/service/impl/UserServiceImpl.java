@@ -1,10 +1,13 @@
 package com.cydeo.service.impl;
 
-import com.cydeo.dto.RoleDTO;
+import com.cydeo.dto.ProjectDTO;
+import com.cydeo.dto.TaskDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.User;
 import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.UserRepository;
+import com.cydeo.service.ProjectService;
+import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,10 +20,15 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ProjectService projectService;
+    private final TaskService taskService;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, ProjectService projectService, TaskService taskService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.projectService = projectService;
+        this.taskService = taskService;
     }
 
     @Override
@@ -70,11 +78,10 @@ public class UserServiceImpl implements UserService{
         //go to db and get that use with username
         User user = userRepository.findByUserName(username);
 
-        //change the isdeleted field to true
-        user.setIsDeleted(true);
-
-        //save the object in the db
-        userRepository.save(user);
+        if(checkIfUserCanBeDeleted(user)){
+            user.setIsDeleted(true);
+            userRepository.save(user);
+        }
 
     }
 
@@ -85,4 +92,25 @@ public class UserServiceImpl implements UserService{
 
         return users.stream().map(userMapper::convertToDto).collect(Collectors.toList());
     }
+
+    private boolean checkIfUserCanBeDeleted(User user){
+
+        switch (user.getRole().getDescription()) {
+            case "Manager":
+                List<ProjectDTO> projectDTOList = projectService.listAllNonCompletedByAssignedManager(userMapper.convertToDto(user));
+                return projectDTOList.size() == 0;
+            case "Employee":
+                List<TaskDTO> taskDTOList = taskService.listAllNonCompletedByAssignedEmployee(userMapper.convertToDto(user));
+                return taskDTOList.size() == 0;
+            default:
+                return true;
+        }
+
+
+
+    }
+
+
+
+
 }
